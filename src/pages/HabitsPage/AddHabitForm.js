@@ -3,8 +3,9 @@ import { useState ,useContext } from "react"
 import { AuthContext } from "../../contexts/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../constants/url";
-export default function AddHabitForm ({setOpenForm}) {
-
+import loadingGif from "../../assets/images/loadingGif.gif"
+export default function AddHabitForm ({setOpenForm,form,setForm}) {
+const [loading,setLoading]=useState(false)
     const {config} = useContext(AuthContext);
     const WeekDays = [
         {name:"D",value:0},
@@ -15,11 +16,6 @@ export default function AddHabitForm ({setOpenForm}) {
         {name:"S",value:5},
         {name:"S",value:6}
     ]
-    const [form, setForm] = useState({
-        name: "",
-	    days: []
-  
-    })
    
     function handleForm(e){
         const {name,value} = e.target
@@ -40,20 +36,23 @@ export default function AddHabitForm ({setOpenForm}) {
         
         axios.post(`${BASE_URL}/habits`,form,config)
         .then(res => {
-            
-            console.log(res.data) 
             setOpenForm(false)
-           
+            setForm({
+                name: "",
+                days: []
+          
+            })
         })
         .catch(err => {
-            console.log(err.data)
-            /* setLoading(false) */
+            alert(err.data.response)
+             setLoading(false) 
         })
-        /* setLoading(true) */
+        setLoading(true) 
     }
     return(
         <Form onSubmit={postHabit}>
         <input 
+        disabled = {loading}
          type = "text"
          name ="name" 
          value ={form.name}
@@ -62,18 +61,17 @@ export default function AddHabitForm ({setOpenForm}) {
         required
         />
         <DaysButtonsContainer>
-        {WeekDays.map ((d,index)=> <DayButton key={index} index={index} selectedDays= {form.days}onClick ={()=> addDay(index)}> {d.name} </DayButton>)}
+        {WeekDays.map ((d,index)=> <DayButton type="button" disabled ={loading} key={index} index={index} selectedDays= {form.days}onClick ={()=> addDay(index)}> {d.name} </DayButton>)}
         </DaysButtonsContainer>
 
         <ActionsButtonsContainer> 
             <p onClick={()=> setOpenForm(false)}>Cancelar</p>
-            <button type="submit"> Salvar</button>
+            <button type="submit" disabled = {loading}> {loading? <img src={loadingGif} alt ="icone carregando"/>:"Salvar"}</button>
             </ActionsButtonsContainer>
     </Form>
 
     )
 }
-
 const Form = styled.form`
 margin-top:22px;
 display:flex;
@@ -99,15 +97,16 @@ border-radius: 5px;
         line-height: 25px;
         color: #DBDBDB;
         }
+        &:disabled{
+            background: #F2F2F2;
+        }
     }
 
 `
-
-
 const DaysButtonsContainer = styled.div`
 display:flex;
 `
-const DayButton=styled.div`
+const DayButton=styled.button`
  
         margin-right :4px;
         display:flex;
@@ -126,7 +125,6 @@ const DayButton=styled.div`
         color: ${props=> props.selectedDays.includes(props.index)? "#FFFFFF": "#DBDBDB"}; 
     
 `
-
 const ActionsButtonsContainer = styled.div`
 margin-top:29px;
 display:flex;
@@ -158,5 +156,11 @@ align-items: center;
         color: #FFFFFF;
         border:none;
         box-shadow:none;
+        &:disabled{
+            opacity: 0.7;
+        }
+    }
+    img {
+        width:40px
     }
 `

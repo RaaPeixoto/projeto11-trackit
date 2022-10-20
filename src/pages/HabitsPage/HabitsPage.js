@@ -13,11 +13,16 @@ export default function HabitsPage (){
     const [habitsList,setHabitsList] = useState ([])
     const {config} = useContext(AuthContext);
     const [openForm,setOpenForm]=useState (false)
+    const [form, setForm] = useState({
+        name: "",
+	    days: []
+  
+    })
     useEffect (()=>{
         axios.get(`${BASE_URL}/habits`,config)
         .then(res => setHabitsList(res.data))
         .catch(err=>console.log(err.response.data))
-    },[])
+    },[openForm])
     return (
         <PageContainer>
             <NavBar/>
@@ -25,14 +30,14 @@ export default function HabitsPage (){
                 <p> Meus hábitos</p>
                 <AddHabits onClick={()=>setOpenForm(true)}>+</AddHabits>
             </TitleContainer>
-             {openForm ? <AddHabitForm setOpenForm={setOpenForm}/>: <></>}
+             {openForm ? <AddHabitForm form = {form} setForm={setForm} setOpenForm={setOpenForm}/>: <></>}
             
               
             {habitsList.length === 0? 
             <NoHabits>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear! </NoHabits> 
             : 
             <>
-            {habitsList.map ((h)=> <HabitItem key={h.id} habitName={h.name} habitDays={h.days}/>)}
+            {habitsList.map ((h)=> <HabitItem key={h.id} setHabitsList={setHabitsList} habitId ={h.id} habitName={h.name} habitDays={h.days}/>)}
             </>
             }
             
@@ -48,7 +53,7 @@ padding: 92px 18px 100px  18px;
 display:flex;
 align-items:center;
 flex-direction:column;  
-height:100vh;
+min-height:100vh;
 background: #E5E5E5;
 `
 

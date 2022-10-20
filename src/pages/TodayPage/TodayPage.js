@@ -16,7 +16,7 @@ const day = (new Intl.DateTimeFormat('pt-BR').format(date));
         <Title> {weekday[0].toUpperCase() + weekday.substring(1)} , {day}</Title>
         <NoProgress> Nenhum hábito concluído ainda </NoProgress> {/* quando não tem nenhum hábito concluido */}
         <Progress> 67% dos hábitos concluídos </Progress> {/* porcentagem virá da API */}
-
+   
         <HabitContainer> 
             <div>
                 <HabitTitle> Estudaaaar</HabitTitle>
