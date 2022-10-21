@@ -34,11 +34,11 @@ export default function LoginForm (){
             
             setConfig ({ headers:{Authorization: `Bearer ${res.data.token}`}})
             setAvatar (res.data.image) 
-            navigate("/habitos")
+            navigate("/hoje")
            
         })
         .catch(err => {
-            console.log(err)
+            alert(err.response.data.message)
             setLoading(false)
         })
         setLoading(true)

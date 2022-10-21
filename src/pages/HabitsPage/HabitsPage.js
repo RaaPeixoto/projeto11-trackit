@@ -23,6 +23,7 @@ export default function HabitsPage (){
         .then(res => setHabitsList(res.data))
         .catch(err=>console.log(err.response.data))
     },[openForm])
+    
     return (
         <PageContainer>
             <NavBar/>

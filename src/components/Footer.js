@@ -3,11 +3,14 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import "../assets/style/progressBar.css"
 import { Link } from "react-router-dom";
+import { ProgressContext } from "../contexts/ProgressContext"
+import { useContext } from "react";
 export default function Footer () {
+    const {progress} = useContext(ProgressContext);
     return (
         <FooterContainer>
             <StyledLink to ="/habitos"><p>Hábitos</p></StyledLink>
-            <StyledLink  to ="/hoje"> <div> <CircularProgressbar value={80} text="Hoje"/> </div></StyledLink>
+            <StyledLink  to ="/hoje"> <div> <CircularProgressbar value={progress} text="Hoje"/> </div></StyledLink>
             <StyledLink to ="/historico"> <p> Histórico</p></StyledLink>
         </FooterContainer>
     )
