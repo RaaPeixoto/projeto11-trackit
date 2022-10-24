@@ -1,4 +1,5 @@
 
+
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import GlobalStyle from "./assets/style/GlobalStyle"
 import HabitsPage from "./pages/HabitsPage/HabitsPage";

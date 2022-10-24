@@ -30,10 +30,11 @@ export default function LoginForm (){
         axios.post(`${BASE_URL}/auth/login`,form)
         .then(res => {
             
-            console.log(res.data) 
-            
-            setConfig ({ headers:{Authorization: `Bearer ${res.data.token}`}})
+            setConfig (res.data.token)
             setAvatar (res.data.image) 
+            localStorage.setItem("token",res.data.token)
+            localStorage.setItem("img",res.data.image)
+         
             navigate("/hoje")
            
         })

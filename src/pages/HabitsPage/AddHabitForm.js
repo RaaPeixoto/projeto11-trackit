@@ -8,13 +8,16 @@ export default function AddHabitForm ({setOpenForm,form,setForm}) {
 const [loading,setLoading]=useState(false)
     const {config} = useContext(AuthContext);
     const WeekDays = [
-        {name:"D",value:0},
-        {name:"S",value:1},
-        {name:"T",value:2},
-        {name:"Q",value:3},
-        {name:"Q",value:4},
-        {name:"S",value:5},
-        {name:"S",value:6}
+  
+        "D",
+        "S",
+        "T",
+        "Q",
+        "Q",
+        "S",
+        "S"
+
+    
     ]
    
     function handleForm(e){
@@ -34,7 +37,7 @@ const [loading,setLoading]=useState(false)
         e.preventDefault()
     
         
-        axios.post(`${BASE_URL}/habits`,form,config)
+        axios.post(`${BASE_URL}/habits`,form,{ headers:{Authorization: `Bearer ${config}`}})
         .then(res => {
             setOpenForm(false)
             setForm({
@@ -44,7 +47,7 @@ const [loading,setLoading]=useState(false)
             })
         })
         .catch(err => {
-            alert(err.data.response)
+            alert(err.response.data.message)
              setLoading(false) 
         })
         setLoading(true) 
@@ -61,7 +64,7 @@ const [loading,setLoading]=useState(false)
         required
         />
         <DaysButtonsContainer>
-        {WeekDays.map ((d,index)=> <DayButton type="button" disabled ={loading} key={index} index={index} selectedDays= {form.days}onClick ={()=> addDay(index)}> {d.name} </DayButton>)}
+        {WeekDays.map ((d,index)=> <DayButton type="button" disabled ={loading} key={index} index={index} selectedDays= {form.days}onClick ={()=> addDay(index)}> {d} </DayButton>)}
         </DaysButtonsContainer>
 
         <ActionsButtonsContainer> 

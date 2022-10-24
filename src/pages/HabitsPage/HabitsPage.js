@@ -8,9 +8,9 @@ import { AuthContext } from "../../contexts/AuthContext"
 import axios from "axios"
 import { BASE_URL } from "../../constants/url"
 import HabitItem from "./HabitItem"
-
+import loadingPage from "../../assets/images/loadingPage.gif"
 export default function HabitsPage (){
-    const [habitsList,setHabitsList] = useState ([])
+    const [habitsList,setHabitsList] = useState (null)
     const {config} = useContext(AuthContext);
     const [openForm,setOpenForm]=useState (false)
     const [form, setForm] = useState({
@@ -19,14 +19,18 @@ export default function HabitsPage (){
   
     })
     useEffect (()=>{
-        axios.get(`${BASE_URL}/habits`,config)
+        axios.get(`${BASE_URL}/habits`,{ headers:{Authorization: `Bearer ${config}`}})
         .then(res => setHabitsList(res.data))
         .catch(err=>console.log(err.response.data))
     },[openForm])
     
     return (
-        <PageContainer>
+       <>
             <NavBar/>
+            {habitsList=== null  ? 
+            <Loading > <img src={loadingPage} alt ="loading"/></Loading>
+            :
+            <PageContainer>
             <TitleContainer> 
                 <p> Meus hábitos</p>
                 <AddHabits onClick={()=>setOpenForm(true)}>+</AddHabits>
@@ -41,10 +45,13 @@ export default function HabitsPage (){
             {habitsList.map ((h)=> <HabitItem key={h.id} setHabitsList={setHabitsList} habitId ={h.id} habitName={h.name} habitDays={h.days}/>)}
             </>
             }
+            </PageContainer>
+            }
+            
             
             
             <Footer/>
-        </PageContainer>
+     </>
     )
 }
 
@@ -101,5 +108,14 @@ const NoHabits = styled.p`
     font-size: 17.976px;
     color: #666666;
 `
+const Loading = styled.div `
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+background: #E5E5E5;
+img{
+width: 200px;}
 
+`
 

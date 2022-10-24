@@ -1,58 +1,58 @@
 import styled from "styled-components"
-import {Trash} from "@styled-icons/bootstrap/Trash"
+import { Trash } from "@styled-icons/bootstrap/Trash"
 import { BASE_URL } from "../../constants/url"
 import { AuthContext } from "../../contexts/AuthContext"
 import axios from "axios"
 import { useContext } from "react"
-export default function HabitItem({habitName,habitDays,habitId,setHabitsList}){
+export default function HabitItem({ habitName, habitDays, habitId, setHabitsList }) {
     const days = [
-        {name:"D",value:0},
-        {name:"S",value:1},
-        {name:"T",value:2},
-        {name:"Q",value:3},
-        {name:"Q",value:4},
-        {name:"S",value:5},
-        {name:"S",value:6}
-    
+        "D",
+        "S",
+        "T",
+        "Q",
+        "Q",
+        "S",
+        "S"
+
     ]
-    const {config} = useContext(AuthContext);
-    function confirmDeleteHabit(habitId,habitName){
-        if (window.confirm(`Você tem certeza que deseja deletar : ${habitName}?`)){
+    const { config } = useContext(AuthContext);
+    function confirmDeleteHabit(habitId, habitName) {
+        if (window.confirm(`Você tem certeza que deseja deletar : ${habitName}?`)) {
             deleteHabit(habitId)
-        } 
+        }
     }
-    function deleteHabit(habitId){
+    function deleteHabit(habitId) {
 
-        axios.delete(`${BASE_URL}/habits/${habitId}`,config)
-        .then(() => {
-           
-           habitsRealod()
+        axios.delete(`${BASE_URL}/habits/${habitId}`, { headers: { Authorization: `Bearer ${config}` } })
+            .then(() => {
+
+                habitsRealod()
             })
-        
-        .catch(err => {
-            console.log(err.data)
-             
-        })
+
+            .catch(err => {
+                alert(err.response.data.message)
+
+            })
 
     }
-    function habitsRealod(){
-        axios.get(`${BASE_URL}/habits`,config)
-        .then(res => setHabitsList(res.data))
-        .catch(err=>console.log(err.response.data))
+    function habitsRealod() {
+        axios.get(`${BASE_URL}/habits`, { headers: { Authorization: `Bearer ${config}` } })
+            .then(res => setHabitsList(res.data))
+            .catch(err => console.log(err.response.data))
     }
-return (
-    <HabitsContainer>
+    return (
+        <HabitsContainer>
             <p>{habitName}</p>
-           {/*  Vai vir de api os dias para o map  */}
-            <div>{days.map((d,index)=><Day key ={index} index={index} habitDays={habitDays}>{d.name}</Day>)} </div>
-            <DeletHabit onClick={()=>confirmDeleteHabit(habitId,habitName)}/>
-    </HabitsContainer> 
-         
-)
+
+            <div>{days.map((d, index) => <Day key={index} index={index} habitDays={habitDays}>{d}</Day>)} </div>
+            <DeletHabit onClick={() => confirmDeleteHabit(habitId, habitName)} />
+        </HabitsContainer>
+
+    )
 
 }
 
-const HabitsContainer= styled.div `
+const HabitsContainer = styled.div`
 margin-top :29px;   
 position:relative;
 display:flex;
@@ -85,7 +85,7 @@ const Day = styled.div`
     justify-content:center;
     width: 30px;
     height: 30px;
-    background: ${props=> (props.habitDays).includes(props.index)? "#CFCFCF": "#FFFFFF"}; 
+    background: ${props => (props.habitDays).includes(props.index) ? "#CFCFCF" : "#FFFFFF"}; 
     border: 1px solid #D5D5D5;
     border-radius: 5px;
 
@@ -93,9 +93,9 @@ const Day = styled.div`
     font-style: normal;
     font-weight: 400;
     font-size: 19.976px;
-    color: ${props=> props.habitDays.includes(props.index)? "#FFFFFF": "#DBDBDB"}; 
+    color: ${props => props.habitDays.includes(props.index) ? "#FFFFFF" : "#DBDBDB"}; 
 `
-const DeletHabit = styled(Trash) `
+const DeletHabit = styled(Trash)`
 position:absolute;
 top:11px;
 right:11px;
